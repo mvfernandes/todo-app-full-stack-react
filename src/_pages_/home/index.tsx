@@ -17,7 +17,9 @@ export default function Home() {
             />
           </div>
           <div>
-            <button type="submit">Submit</button>
+            <button type="submit" disabled={!key} title={key ? 'Submit form' : 'Type an key'}>
+              Submit
+            </button>
           </div>
           <footer>{message}</footer>
         </CardStyle>
