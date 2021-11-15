@@ -14,6 +14,12 @@ export const Container = styled.header`
     text-align: center;
   }
 
+  a {
+    border: solid 1px;
+    padding: 5px;
+    border-radius: 4px;
+  }
+
   button {
     margin-top: 2rem;
   }
