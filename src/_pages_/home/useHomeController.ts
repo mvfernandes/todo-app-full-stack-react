@@ -7,16 +7,18 @@ export default function useHomeController() {
   const [key, setKey] = useState('');
   async function submitForm(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const response: BaseResponseType = await api.post('api/login', { key });
-    if (!response.success) {
-      setMessage(response.message);
-      setTimeout(() => {
-        setMessage('');
-      }, 2500);
-      return;
+    if (!!key.trim()) {
+      const response: BaseResponseType = await api.post('api/login', { key });
+      if (!response.success) {
+        setMessage(response.message);
+        setTimeout(() => {
+          setMessage('');
+        }, 2500);
+        return;
+      }
+      localStorage.setItem('myKey', key);
+      window.location.replace('/app');
     }
-    localStorage.setItem('myKey', key);
-    window.location.replace('/app');
   }
   return { submitForm, message, key, setKey };
 }

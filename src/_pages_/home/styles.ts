@@ -15,6 +15,10 @@ export const Container = styled.main`
       width: 100%;
     }
 
+    button[disabled] {
+      cursor: not-allowed;
+    }
+
     footer {
       color: #d71515ed;
     }
