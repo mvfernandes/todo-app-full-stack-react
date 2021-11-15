@@ -1,0 +1,61 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { PrismaClient } from '@prisma/client';
+
+import { BaseResponseType } from '@/types/request';
+
+const prisma = new PrismaClient();
+
+type NextReqResType<T = BaseResponseType> = (req: NextApiRequest, res: NextApiResponse<T>) => Promise<void>;
+
+const get: NextReqResType = async (_, res) => {
+  const todos = await prisma.todo.findMany({});
+  return res.status(200).json({ message: '', success: true, body: todos });
+};
+
+const post: NextReqResType = async (req, res) => {
+  if (!!req.body.todo) {
+    const totdoCreated = await prisma.todo.create({
+      data: {
+        todo: req.body.todo,
+      },
+    });
+    return res.status(201).json({ message: '', success: true, body: { id: totdoCreated.id } });
+  }
+  return res.status(404).json({ message: 'Nada encontrado', success: false });
+};
+
+const put: NextReqResType = async (req, res) => {
+  if (!!['id', 'todo', 'done'].every((i) => req.body[i] !== 'undefined')) {
+    const { id, todo, done } = req.body;
+    const data = { todo, done };
+    await prisma.todo.update({
+      data,
+      where: { id },
+    });
+    return res.status(201).json({ message: 'Todo atualizado', success: true });
+  }
+  return res.status(404).json({ message: 'Nada encontrado', success: false });
+};
+
+const del: NextReqResType = async (req, res) => {
+  if (!!req.query.id) {
+    await prisma.todo.delete({
+      where: { id: Number(req.query.id) },
+    });
+    return res.status(200).json({ message: 'Deletado com sucesso', success: true });
+  }
+  return res.status(404).json({ message: 'Nada encontrado', success: false });
+};
+
+export default function handler(req: NextApiRequest, res: NextApiResponse<BaseResponseType>) {
+  if (req.headers.authorization !== process.env.SECRET_KEY) {
+    return res.status(401).json({ message: 'unauthorized', success: false });
+  }
+
+  if (req.method === 'GET') return get(req, res);
+
+  req.body = JSON.parse(req.body);
+  if (req.method === 'POST') return post(req, res);
+  if (req.method === 'PUT') return put(req, res);
+  if (req.method === 'DELETE') return del(req, res);
+}
