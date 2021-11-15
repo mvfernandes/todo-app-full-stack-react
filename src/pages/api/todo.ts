@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 type NextReqResType<T = BaseResponseType> = (req: NextApiRequest, res: NextApiResponse<T>) => Promise<void>;
 
 const get: NextReqResType = async (_, res) => {
-  const todos = await prisma.todo.findMany({});
+  const todos = await prisma.todo.findMany({orderBy: {id: 'desc'}});
   return res.status(200).json({ message: '', success: true, body: todos });
 };
 
