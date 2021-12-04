@@ -1,10 +1,21 @@
 import { Header } from '@/components/header';
 import { withLogged } from '@/hocs/withLogged';
-import { Card, Container, CardHead, CardFooter, CardContent, TaskItem, TaskItemText, Trash, Clean } from './styles';
+import {
+  Card,
+  Container,
+  CardHead,
+  CardFooter,
+  CardContent,
+  TaskItem,
+  TaskItemText,
+  Trash,
+  Clean,
+  ErrorText,
+} from './styles';
 import useAppController from './useAppController';
 
 function App() {
-  const { todos, todo, setTodo, submitAddTodo, toggleDone, removeTodo } = useAppController();
+  const { todos, todo, setTodo, submitAddTodo, toggleDone, removeTodo, error } = useAppController();
 
   return (
     <>
@@ -28,6 +39,7 @@ function App() {
             ))}
           </CardContent>
           <form onSubmit={submitAddTodo}>
+            {!!error && <ErrorText>{error}</ErrorText>}
             <CardFooter>
               <div className="input">
                 <input

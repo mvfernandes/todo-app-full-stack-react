@@ -103,3 +103,8 @@ export const Clean = styled.i.attrs({
   height: auto;
   align-self: center;
 `;
+
+export const ErrorText = styled.p`
+  color: #ff0000;
+  padding: 0.5rem 1.5rem
+`;

@@ -1,11 +1,19 @@
 import { api } from '@/services/request';
 import { BaseResponseType } from '@/types/request';
 import { TodoType } from '@/types/todo';
-import { FormEvent, useCallback, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 
 export default function useAppController() {
+  const [error, setError] = useState('');
   const [todo, setTodo] = useState('');
   const [todos, setTodos] = useState<TodoType[]>([]);
+
+  const makeError = (message: string) => {
+    setError(message);
+    setTimeout(() => {
+      setError('');
+    }, 2500);
+  };
 
   useEffect(() => {
     api.get('api/todo').then((response) => {
@@ -17,8 +25,12 @@ export default function useAppController() {
     event.preventDefault();
     if (!!todo.trim()) {
       const response: BaseResponseType = await api.post('api/todo', { todo });
-      setTodos((prev) => [{ id: response.body.id, todo, done: false }, ...prev]);
-      setTodo('');
+      if (response.success) {
+        setTodos((prev) => [{ id: response.body.id, todo, done: false }, ...prev]);
+        setTodo('');
+      } else {
+        makeError(response.message || 'Ocorreu algum erro');
+      }
     }
   }
 
@@ -46,5 +58,6 @@ export default function useAppController() {
     submitAddTodo,
     toggleDone,
     removeTodo,
+    error
   };
 }

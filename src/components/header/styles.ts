@@ -4,8 +4,7 @@ export const Container = styled.header`
   padding: 1rem;
   flex: 1;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
 
   h2,
@@ -14,13 +13,11 @@ export const Container = styled.header`
     text-align: center;
   }
 
-  a {
-    border: solid 1px;
-    padding: 5px;
+  button {
+    padding: 0.4rem;
     border-radius: 4px;
   }
-
-  button {
-    margin-top: 2rem;
+  button.btn-logout {
+    background: #ff0000;
   }
 `;
