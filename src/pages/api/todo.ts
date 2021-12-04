@@ -16,7 +16,7 @@ const post: NextReqResType = async (req, res) => {
   if (!!req.body.todo) {
     const count = await prisma.todo.count();
     if (count >= 10) {
-      return res.json({ message: 'Desculpe, o limite de tarefas é somente 20', success: false });
+      return res.json({ message: 'O limite de tarefas é somente 10', success: false });
     }
 
     const totdoCreated = await prisma.todo.create({
